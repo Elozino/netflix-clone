@@ -1,18 +1,22 @@
 import Input from '@/components/Input'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import App from './_app';
+import axios from 'axios';
+import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 interface IUserInput {
   email: string;
-  username: string;
+  name: string;
   password: string;
 }
 
 const Auth = () => {
+  const router = useRouter();
   const [userInput, setUserInput] = useState<IUserInput>({
     email: "",
-    username: "",
+    name: "",
     password: ""
   })
 
@@ -25,6 +29,31 @@ const Auth = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserInput({ ...userInput, [e.target.id]: e.target.value })
   }
+
+  const login = useCallback(async () => {
+    try {
+      await signIn('credentials', {
+        email: userInput.email,
+        password: userInput.password,
+        redirect: false,
+        callbackUrl: '/',
+      })
+
+      router.push('/');
+    } catch (error) {
+      console.log(error);
+    }
+  }, [router, userInput.email, userInput.password])
+  
+  const register = useCallback(async () => {
+    try {
+      await axios.post('/api/register', { ...userInput })
+      login()
+    } catch (error) {
+      console.log(error)
+    }
+  }, [login, userInput])
+
   return (
     <div className="relative h-full w-full bg-[url('/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
       <div className='bg-black w-full h-full lg:bg-opacity-50'>
@@ -44,9 +73,9 @@ const Auth = () => {
             <div className='flex flex-col gap-4'>
               {variant === 'register' && (
                 <Input
-                  id={'username'}
+                  id={'name'}
                   onChange={handleInputChange}
-                  value={userInput.username}
+                  value={userInput.name}
                   label={'Username'}
                 />
               )}
@@ -65,7 +94,11 @@ const Auth = () => {
                 type='password'
               />
             </div>
-            <button className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
+            <button
+              onClick={() => {
+                variant === 'login' ? login() : register()
+              }}
+              className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
               {variant === 'login' ? 'Login' : 'Register'}
             </button>
             <p className='text-neutral-500 mt-12'>
