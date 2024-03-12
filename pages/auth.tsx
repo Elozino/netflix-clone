@@ -6,6 +6,10 @@ import axios from 'axios';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
+
+import { FcGoogle } from 'react-icons/fc';
+import { FaGithub } from 'react-icons/fa';
+
 interface IUserInput {
   email: string;
   name: string;
@@ -44,7 +48,7 @@ const Auth = () => {
       console.log(error);
     }
   }, [router, userInput.email, userInput.password])
-  
+
   const register = useCallback(async () => {
     try {
       await axios.post('/api/register', { ...userInput })
@@ -101,6 +105,26 @@ const Auth = () => {
               className="bg-red-600 py-3 text-white rounded-md w-full mt-10 hover:bg-red-700 transition">
               {variant === 'login' ? 'Login' : 'Register'}
             </button>
+            <div className='flex flex-row items-center gap-4 justify-center mt-8'>
+              <div
+                onClick={() => signIn('google', {
+                  callbackUrl: '/',
+                })}
+                className='w-10 h-10 bg-white rounded-full flex justify-center items-center
+                cursor-pointer hover:opacity-80 transition
+                '>
+                <FcGoogle size={30} />
+              </div>
+              <div
+                onClick={() => signIn('github', {
+                  callbackUrl: '/',
+                })}
+                className='w-10 h-10 bg-white rounded-full flex justify-center items-center
+                cursor-pointer hover:opacity-80 transition
+                '>
+                <FaGithub size={30} />
+              </div>
+            </div>
             <p className='text-neutral-500 mt-12'>
               {variant === 'login' ? 'First time using Netflix?' : 'Already have an account?'}{" "}
               <span
