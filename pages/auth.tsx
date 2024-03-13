@@ -1,14 +1,12 @@
-import Input from '@/components/Input'
-import Image from 'next/image'
-import React, { useCallback, useState } from 'react'
-import App from './_app';
+import Input from '@/components/Input';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/router';
+import Image from 'next/image';
+import React, { useCallback, useState } from 'react';
 
 
-import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 
 interface IUserInput {
   email: string;
@@ -17,7 +15,6 @@ interface IUserInput {
 }
 
 const Auth = () => {
-  const router = useRouter();
   const [userInput, setUserInput] = useState<IUserInput>({
     email: "",
     name: "",
@@ -39,15 +36,12 @@ const Auth = () => {
       await signIn('credentials', {
         email: userInput.email,
         password: userInput.password,
-        redirect: false,
-        callbackUrl: '/',
+        callbackUrl: '/profiles',
       })
-
-      router.push('/');
     } catch (error) {
       console.log(error);
     }
-  }, [router, userInput.email, userInput.password])
+  }, [userInput.email, userInput.password])
 
   const register = useCallback(async () => {
     try {
@@ -108,7 +102,7 @@ const Auth = () => {
             <div className='flex flex-row items-center gap-4 justify-center mt-8'>
               <div
                 onClick={() => signIn('google', {
-                  callbackUrl: '/',
+                  callbackUrl: '/profiles',
                 })}
                 className='w-10 h-10 bg-white rounded-full flex justify-center items-center
                 cursor-pointer hover:opacity-80 transition
@@ -117,7 +111,7 @@ const Auth = () => {
               </div>
               <div
                 onClick={() => signIn('github', {
-                  callbackUrl: '/',
+                  callbackUrl: '/profiles',
                 })}
                 className='w-10 h-10 bg-white rounded-full flex justify-center items-center
                 cursor-pointer hover:opacity-80 transition
