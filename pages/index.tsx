@@ -8,6 +8,7 @@ import useMoviesList from "@/hooks/useMoviesList";
 import type { NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import { Inter } from "next/font/google";
+import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,9 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>Netflix Clone</title>
+      </Head>
       <InfoModal visible={isOpen} onClose={closeModal} />
       <Navbar />
       <Billboard />
