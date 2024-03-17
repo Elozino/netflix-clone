@@ -1,3 +1,4 @@
+import useCurrentUser from '@/hooks/useCurrentUser';
 import { signOut } from 'next-auth/react';
 import Image from 'next/image'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -153,6 +154,7 @@ interface IAccountMenuProps {
   visible?: boolean;
 }
 const AccountMenu: React.FC<IAccountMenuProps> = ({ visible }) => {
+  const { data } = useCurrentUser()
   if (!visible) return null
   return (
     <div className="bg-black w-56 py-3 absolute top-14 right-0 flex-col border-gray-800 border-2 flex">
@@ -166,7 +168,7 @@ const AccountMenu: React.FC<IAccountMenuProps> = ({ visible }) => {
             alt='Profiles'
             priority
           />
-          <p className='text-white text-sm group-hover/item:underline'>Username</p>
+          <p className='text-white text-sm group-hover/item:underline'>{data?.name}</p>
         </div>
         <hr className='bg-gray-600 border-0 h-px my-4' />
         <div
